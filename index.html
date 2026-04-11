@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anastasios Amanatidis — Data Scientist</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #181818;
+    --line: #222222;
+    --text: #e8e4dc;
+    --muted: #6b6b6b;
+    --accent: #c8f060;
+    --accent2: #4a9eff;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --mono: 'DM Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 48px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hero-left {
+    padding: 160px 48px 80px;
+    border-right: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .hero-name {
+    font-family: var(--serif);
+    font-size: clamp(48px, 5vw, 72px);
+    line-height: 1.05;
+    font-weight: 400;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+
+  .hero-name em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 420px;
+    line-height: 1.8;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+
+  .hero-cta {
+    margin-top: 48px;
+    display: flex;
+    gap: 16px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 12px 28px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #0a0a0a;
+    border-color: var(--accent);
+  }
+
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--accent);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--line);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--text);
+  }
+
+  .hero-right {
+    padding: 160px 48px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 32px;
+  }
+
+  .stat-block {
+    border-left: 2px solid var(--accent);
+    padding-left: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+  }
+
+  .stat-block:nth-child(1) { animation-delay: 0.5s; }
+  .stat-block:nth-child(2) { animation-delay: 0.7s; }
+  .stat-block:nth-child(3) { animation-delay: 0.9s; }
+
+  .stat-number {
+    font-family: var(--serif);
+    font-size: 48px;
+    line-height: 1;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Section layout */
+  section {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .section-inner {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 0;
+  }
+
+  .section-label {
+    padding: 64px 48px;
+    border-right: 1px solid var(--line);
+  }
+
+  .section-label span {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  .section-content {
+    padding: 64px 48px;
+  }
+
+  /* About */
+  .about-text {
+    font-size: 17px;
+    line-height: 1.85;
+    color: var(--text);
+    max-width: 680px;
+  }
+
+  .about-text p + p {
+    margin-top: 24px;
+  }
+
+  /* Skills */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    max-width: 720px;
+  }
+
+  .skill-cell {
+    background: var(--bg);
+    padding: 24px 28px;
+    transition: background 0.2s;
+  }
+
+  .skill-cell:hover { background: var(--bg3); }
+
+  .skill-cell-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .skill-cell-name {
+    font-size: 15px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* Projects */
+  .project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 760px;
+  }
+
+  .project-item {
+    padding: 32px 0;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: start;
+    transition: background 0.2s;
+  }
+
+  .project-item:last-child { border-bottom: none; }
+
+  .project-company {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .project-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .project-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 520px;
+  }
+
+  .project-metric {
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .metric-number {
+    font-family: var(--serif);
+    font-size: 36px;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .metric-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* Tech tags */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+
+  /* Contact */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    max-width: 680px;
+  }
+
+  .contact-heading {
+    font-family: var(--serif);
+    font-size: 38px;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    grid-column: 1 / -1;
+  }
+
+  .contact-heading em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .contact-sub {
+    font-size: 14px;
+    color: var(--muted);
+    grid-column: 1 / -1;
+    margin-bottom: 8px;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text);
+    text-decoration: none;
+    padding: 16px 0;
+    border-top: 1px solid var(--line);
+    transition: color 0.2s;
+  }
+
+  .contact-link:hover { color: var(--accent); }
+
+  .contact-link-icon {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* Footer */
+  footer {
+    padding: 32px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer span {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-left { padding: 120px 24px 48px; }
+    .hero-right { padding: 48px 24px; border-top: 1px solid var(--line); }
+    .section-inner { grid-template-columns: 1fr; }
+    .section-label { display: none; }
+    .section-content { padding: 48px 24px; }
+    .skills-grid { grid-template-columns: 1fr 1fr; }
+    .project-item { grid-template-columns: 1fr; }
+    .project-metric { text-align: left; }
+    .contact-grid { grid-template-columns: 1fr; gap: 24px; }
+    footer { padding: 24px; flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">AA / data</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-tag">Available for freelance projects</p>
+    <h1 class="hero-name">Anastasios<br><em>Amanatidis</em></h1>
+    <p class="hero-sub">Freelance Data Scientist & Data Engineer. I turn complex, manual workflows into efficient, scalable data systems.</p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn btn-primary">Hire me</a>
+      <a href="#projects" class="btn btn-secondary">View projects</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="stat-block">
+      <div class="stat-number">90%</div>
+      <div class="stat-label">Processing time reduced</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-number">85%</div>
+      <div class="stat-label">Error rate reduction</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-number">M.Sc.</div>
+      <div class="stat-label">Mathematics — Data Science & Algo. Engineering</div>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about">
+  <div class="section-inner">
+    <div class="section-label"><span>About</span></div>
+    <div class="section-content">
+      <div class="about-text">
+        <p>As a Freelance Data Scientist, I work on the preparation, processing, and analysis of data using Python and SQL, as well as on process automation and the development of data-driven solutions that turn complex, manual workflows into efficient and scalable systems. As a Data Analyst and Data Engineer, I design and implement ETL pipelines and build dashboards in Power BI that deliver insights that are actionable rather than just informative.</p>
+        <p>I hold a Master's degree in Mathematics with a specialization in Data Science and Algorithmic Engineering, which gave me a strong analytical foundation and a structured approach to solving data problems.</p>
+        <p>My background is in actuarial analysis, where I work primarily in company pension schemes (bAV). These experiences confirm what my studies had already pointed toward: I work best at the intersection of mathematics, data, and process improvement.</p>
+        <p>I am currently expanding my skill set into PySpark and Machine Learning — areas increasingly relevant for scalable, AI-driven data solutions. My objective is to help organizations move beyond manual processes and build data infrastructure that is reliable, efficient, and built to scale.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Skills -->
+<section id="skills">
+  <div class="section-inner">
+    <div class="section-label"><span>Skills</span></div>
+    <div class="section-content">
+      <div class="skills-grid">
+        <div class="skill-cell">
+          <div class="skill-cell-label">Language</div>
+          <div class="skill-cell-name">Python</div>
+        </div>
+        <div class="skill-cell">
+          <div class="skill-cell-label">Language</div>
+          <div class="skill-cell-name">SQL</div>
+        </div>
+        <div class="skill-cell">
+          <div class="skill-cell-label">Visualisation</div>
+          <div class="skill-cell-name">Power BI</div>
+        </div>
+        <div class="skill-cell">
+          <div class="skill-cell-label">Engineering</div>
+          <div class="skill-cell-name">ETL Pipelines</div>
+        </div>
+        <div class="skill-cell">
+          <div class="skill-cell-label">Engineering</div>
+          <div class="skill-cell-name">Data Engineer</div>
+        </div>
+        <div class="skill-cell">
+          <div class="skill-cell-label">Analysis</div>
+          <div class="skill-cell-name">Data Analyst</div>
+        </div>
+        <div class="skill-cell">
+          <div class="skill-cell-label">Automation</div>
+          <div class="skill-cell-name">Power Query</div>
+        </div>
+        <div class="skill-cell">
+          <div class="skill-cell-label">In progress</div>
+          <div class="skill-cell-name">PySpark</div>
+        </div>
+        <div class="skill-cell">
+          <div class="skill-cell-label">In progress</div>
+          <div class="skill-cell-name">Machine Learning</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="projects">
+  <div class="section-inner">
+    <div class="section-label"><span>Projects</span></div>
+    <div class="section-content">
+      <div class="project-list">
+
+        <div class="project-item">
+          <div>
+            <div class="project-company">Automotive sector — Mercedes</div>
+            <div class="project-title">Data Quality Tool in Power BI</div>
+            <p class="project-desc">Built a data quality monitoring tool in Power BI and applied Python to clean and process large datasets. Reduced error rates across two data sources from 25–45% down to 3–5%.</p>
+            <div class="tags">
+              <span class="tag">Power BI</span>
+              <span class="tag">Python</span>
+              <span class="tag">Data Quality</span>
+            </div>
+          </div>
+          <div class="project-metric">
+            <div class="metric-number">85%</div>
+            <div class="metric-label">Error reduction</div>
+          </div>
+        </div>
+
+        <div class="project-item">
+          <div>
+            <div class="project-company">bAV — Pension Administration</div>
+            <div class="project-title">Pension Application Automation</div>
+            <p class="project-desc">Automated the end-to-end pension application process, replacing a fully manual workflow of 10–15 minutes with an automated solution running in under one minute.</p>
+            <div class="tags">
+              <span class="tag">Python</span>
+              <span class="tag">Automation</span>
+              <span class="tag">Process Design</span>
+            </div>
+          </div>
+          <div class="project-metric">
+            <div class="metric-number">90%</div>
+            <div class="metric-label">Time saved</div>
+          </div>
+        </div>
+
+        <div class="project-item">
+          <div>
+            <div class="project-company">bAV — Internal Tooling</div>
+            <div class="project-title">Excel to Modular Data Architecture</div>
+            <p class="project-desc">Restructured a shared multi-user Excel environment into a modular system of five workbooks with automated data consolidation via Power Query, eliminating versioning conflicts entirely.</p>
+            <div class="tags">
+              <span class="tag">Power Query</span>
+              <span class="tag">Excel</span>
+              <span class="tag">Data Architecture</span>
+            </div>
+          </div>
+          <div class="project-metric">
+            <div class="metric-number">5×</div>
+            <div class="metric-label">Files modularised</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="section-label"><span>Contact</span></div>
+    <div class="section-content">
+      <div class="contact-grid">
+        <h2 class="contact-heading">Let's work<br><em>together.</em></h2>
+        <p class="contact-sub">Available for freelance projects in Data Science, Data Engineering, and Process Automation. Based in Germany, working remotely.</p>
+        <div style="grid-column: 1 / -1;">
+          <a href="/cdn-cgi/l/email-protection#92f3fcf3e1e6f3e1fbfde1bcf3fff3fcf3e6fbf6fbe1aba7d2f5fff3fbfebcf1fdff" class="contact-link">
+            <span class="contact-link-icon">@</span>
+            <span class="__cf_email__" data-cfemail="294847485a5d485a40465a0748444847485d404d405a101c694e44484045074a4644">[email&#160;protected]</span>
+          </a>
+          <a href="tel:+491603021518" class="contact-link">
+            <span class="contact-link-icon">✆</span>
+            +49 160 3021518
+          </a>
+          <a href="https://www.linkedin.com/in/anastasios-amanatidis" target="_blank" class="contact-link">
+            <span class="contact-link-icon">in</span>
+            LinkedIn Profile
+          </a>
+          <a href="https://www.github.com/anastasios-amanatidis" target="_blank" class="contact-link">
+            <span class="contact-link-icon">gh</span>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>Anastasios Amanatidis</span>
+  <span>Freelance Data Scientist · Stuttgart, Germany</span>
+  <span>© 2026</span>
+</footer>
+</body>
+</html>
